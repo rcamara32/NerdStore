@@ -14,11 +14,19 @@ namespace NerdStore.Catalog.Domain
         {
             Name = name;
             Code = code;
+
+            Validate();
         }
 
         public override string ToString()
         {
             return $"{Name} - {Code}";
         }
+        
+        public void Validate() {
+            Validations.ValidateIsEmpty(Name, "The Category Name cannot be empty");
+            Validations.ValidateEquals(Code, 0, "The Category Code cannot be 0");
+        }
+
     }
 }

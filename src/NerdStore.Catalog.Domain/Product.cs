@@ -1,7 +1,5 @@
 ﻿using NerdStore.Core.DomainObjects;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NerdStore.Catalog.Domain
 {
@@ -28,6 +26,8 @@ namespace NerdStore.Catalog.Domain
             CategoryId = categoryId;
             CreatedDate = createdDate;
             Image = image;
+
+            Validate();
         }
 
         public void Activate() => IsActive = true;
@@ -41,13 +41,19 @@ namespace NerdStore.Catalog.Domain
 
         public void ChangeDescription(string description)
         {
+            Validations.ValidateIsEmpty(description, "The Product Description cannot be empty");
             Description = description;
         }
 
-        public void StockDebit(int quantity) 
+        public void StockDebit(int quantity)
         {
             if (quantity < 0)
                 quantity *= -1;
+
+            if (HasStock(quantity))
+            {
+                throw new DomainException($"{Name} product stock is insufficient");
+            }
 
             StockQuantity -= quantity;
         }
@@ -57,14 +63,18 @@ namespace NerdStore.Catalog.Domain
             StockQuantity += quantity;
         }
 
-        public bool HasStock(int quantity) 
+        public bool HasStock(int quantity)
         {
             return StockQuantity >= quantity;
         }
 
-        public void Valid()
-        { 
-            
+        public void Validate()
+        {
+            Validations.ValidateIsEmpty(Name, "The Product Name cannot be empty");
+            Validations.ValidateIsEmpty(Description, "The Product Description cannot be empty");
+            Validations.ValidateDifferent(CategoryId, Guid.Empty, "The Product Category Id cannot be empty");
+            Validations.ValidateLessOrEqualsMinimum(Price, 0, "The Product Price cannot be less or equals zero.");
+            Validations.ValidateIsEmpty(Image, "The Product image cannot be empty");
         }
 
     }
