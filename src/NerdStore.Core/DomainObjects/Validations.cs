@@ -5,15 +5,15 @@ namespace NerdStore.Core.DomainObjects
     public static class Validations
     {
 
-        public static void ValidateEquals(object object1, object object2, string message)
+        public static void IfEquals(object object1, object object2, string message)
         {
-            if (!object1.Equals(object2))
+            if (object1.Equals(object2))
             {
                 throw new DomainException(message);
             }
         }
 
-        public static void ValidateDifferent(object object1, object object2, string message)
+        public static void IfDifferent(object object1, object object2, string message)
         {
             if (object1.Equals(object2))
             {
@@ -67,7 +67,7 @@ namespace NerdStore.Core.DomainObjects
             }
         }
 
-
+        #region "Validate Minimun Maximum"
         public static void ValidateMinimunMaximum(decimal value, decimal minimum, decimal maximum, string message)
         {
             if (value < minimum || value > maximum)
@@ -100,68 +100,69 @@ namespace NerdStore.Core.DomainObjects
             }
         }
 
-        public static void ValidateMinimunMaximum(long value, long minimum, long maximum, string message) 
+        public static void ValidateMinimunMaximum(long value, long minimum, long maximum, string message)
         {
             if (value < minimum || value > maximum)
             {
                 throw new DomainException(message);
             }
-        }
+        } 
+        #endregion
 
+        #region "Validate Less Than"
 
-
-        public static void ValidateLessOrEqualsMinimum(decimal value, decimal minimum, string message)
+        public static void ValidateLessThan(decimal value, decimal minimum, string message)
         {
-            if (value <= minimum)
+            if (value < minimum)
             {
                 throw new DomainException(message);
             }
         }
 
-        public static void ValidateLessOrEqualsMinimum(double value, double minimum, string message)
+        public static void ValidateLessThan(double value, double minimum, string message)
         {
-            if (value <= minimum)
+            if (value < minimum)
             {
                 throw new DomainException(message);
             }
         }
 
-        public static void ValidateLessOrEqualsMinimum(float value, float minimum, string message)
+        public static void ValidateLessThan(float value, float minimum, string message)
         {
-            if (value <= minimum)
+            if (value < minimum)
             {
                 throw new DomainException(message);
             }
         }
 
-        public static void ValidateLessOrEqualsMinimum(int value, int minimum, string message) 
+        public static void ValidateLessThan(int value, int minimum, string message)
         {
-            if (value <= minimum)
+            if (value < minimum)
             {
                 throw new DomainException(message);
             }
         }
 
-        public static void ValidateLessOrEqualsMinimum(long value, long minimum, string message)
+        public static void ValidateLessThan(long value, long minimum, string message)
         {
-            if (value <= minimum)
+            if (value < minimum)
             {
                 throw new DomainException(message);
             }
         }
 
-
-
-        public static void ValidateIsFalse(bool value, string message)
-        {
-            if (value)
-            {
-                throw new DomainException(message);
-            }
-        }
-        public static void ValidateIsTrue(bool value, string message)
+        #endregion
+        
+        public static void CheckIsFalse(bool value, string message)
         {
             if (!value)
+            {
+                throw new DomainException(message);
+            }
+        }
+        public static void CheckIsTrue(bool value, string message)
+        {
+            if (value)
             {
                 throw new DomainException(message);
             }

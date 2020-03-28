@@ -25,7 +25,7 @@ namespace NerdStore.Catalog.Domain
         
         public void Validate() {
             Validations.ValidateIsEmpty(Name, "The Category Name cannot be empty");
-            Validations.ValidateEquals(Code, 0, "The Category Code cannot be 0");
+            Validations.IfEquals(Code, 0, "The Category Code cannot be 0");
         }
 
     }

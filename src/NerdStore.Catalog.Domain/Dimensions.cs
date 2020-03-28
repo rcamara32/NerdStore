@@ -23,9 +23,9 @@ namespace NerdStore.Catalog.Domain
 
         public void Validate()
         {
-            Validations.ValidateLessOrEqualsMinimum(Height, 1, "The Height cannot be less or equals zero.");
-            Validations.ValidateLessOrEqualsMinimum(Width, 1, "The Width cannot be less or equals zero.");
-            Validations.ValidateLessOrEqualsMinimum(Depth, 1, "The Depth cannot be less or equals zero.");
+            Validations.ValidateLessThan(Height, 1, "The Height cannot be less or equals zero");
+            Validations.ValidateLessThan(Width, 1, "The Width cannot be less or equals zero");
+            Validations.ValidateLessThan(Depth, 1, "The Depth cannot be less or equals zero");
         }
 
         public string FormattedSize()
