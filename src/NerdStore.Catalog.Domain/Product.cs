@@ -15,7 +15,11 @@ namespace NerdStore.Catalog.Domain
         public int StockQuantity { get; private set; }
         
         public Dimensions Dimensions { get; private set; }
-        public virtual Category Category { get; private set; }
+        
+        //EF Relation
+        public Category Category { get; private set; }
+
+        protected Product() { }
 
         public Product(string name, string description, bool isActive, decimal price,
             Guid categoryId, DateTime createdDate, string image, Dimensions dimensions)
