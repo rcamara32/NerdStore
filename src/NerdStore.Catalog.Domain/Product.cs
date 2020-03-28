@@ -13,11 +13,12 @@ namespace NerdStore.Catalog.Domain
         public DateTime CreatedDate { get; private set; }
         public string Image { get; private set; }
         public int StockQuantity { get; private set; }
-
-        public virtual Category Category { get; set; }
+        
+        public Dimensions Dimensions { get; private set; }
+        public virtual Category Category { get; private set; }
 
         public Product(string name, string description, bool isActive, decimal price,
-            Guid categoryId, DateTime createdDate, string image)
+            Guid categoryId, DateTime createdDate, string image, Dimensions dimensions)
         {
             Name = name;
             Description = description;
@@ -26,6 +27,7 @@ namespace NerdStore.Catalog.Domain
             CategoryId = categoryId;
             CreatedDate = createdDate;
             Image = image;
+            Dimensions = dimensions;
 
             Validate();
         }
