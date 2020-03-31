@@ -1,8 +1,8 @@
-﻿using NerdStore.Catalog.Domain.Interface.Repostory;
+﻿using NerdStore.Catalog.Domain.Events;
+using NerdStore.Catalog.Domain.Interface.Repostory;
 using NerdStore.Catalog.Domain.Interface.Service;
+using NerdStore.Core.Bus;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NerdStore.Catalog.Domain.Services
@@ -11,10 +11,13 @@ namespace NerdStore.Catalog.Domain.Services
     {
 
         private readonly IProductRepository productRepository;
+        private readonly IMediatrHandler bus;
 
-        public StockService(IProductRepository _productRepository)
+        public StockService(IProductRepository _productRepository, 
+            IMediatrHandler _bus)
         {
             productRepository = _productRepository;
+            bus = _bus;
         }
 
         public async Task<bool> Debit(Guid productId, int quantity)
@@ -32,6 +35,13 @@ namespace NerdStore.Catalog.Domain.Services
             }
 
             product.StockDebit(quantity);
+
+            //TODO: parametrize this value
+            if (product.StockQuantity < 5)
+            {                
+                await bus.PublishEvent(new LowStockEvent(product.Id, quantity));
+            }
+
             productRepository.Update(product);
             return await productRepository.UnitOfWork.Commit();
         }
