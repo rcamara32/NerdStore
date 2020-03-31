@@ -1,7 +1,7 @@
 ﻿using NerdStore.Core.DomainObjects;
 using System;
 
-namespace NerdStore.Catalog.Domain
+namespace NerdStore.Catalog.Domain.Entities
 {
     public class Product : Entity, IAggregateRoot
     {

@@ -1,4 +1,5 @@
-﻿using NerdStore.Core.Data;
+﻿using NerdStore.Catalog.Domain.Entities;
+using NerdStore.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
