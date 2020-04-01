@@ -12,7 +12,6 @@ namespace NerdStore.Catalog.Domain.Entities
         public ICollection<Product> Products { get; set; }
 
         protected Category() { }
-
         public Category(string name, int code)
         {
             Name = name;

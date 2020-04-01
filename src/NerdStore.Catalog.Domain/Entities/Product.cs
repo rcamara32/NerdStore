@@ -20,7 +20,6 @@ namespace NerdStore.Catalog.Domain.Entities
         public Category Category { get; private set; }
 
         protected Product() { }
-
         public Product(string name, string description, bool isActive, decimal price,
             Guid categoryId, DateTime createdDate, string image, Dimensions dimensions)
         {
