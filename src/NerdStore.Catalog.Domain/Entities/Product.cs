@@ -55,7 +55,7 @@ namespace NerdStore.Catalog.Domain.Entities
             if (quantity < 0)
                 quantity *= -1;
 
-            if (HasStock(quantity))
+            if (!HasStock(quantity))
             {
                 throw new DomainException($"{Name} product stock is insufficient");
             }
