@@ -26,7 +26,7 @@ namespace NerdStore.WebApp.MVC
         {
 
             services.AddDbContext<CatalogContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 
             services.AddControllersWithViews();
