@@ -14,7 +14,7 @@
             <input type="hidden" asp-for="Id" />
 
             <div class="form-group">
-                <label class="control-label">Categoria</label>
+                <label class="control-label">Category</label>
                 <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
                     <option></option>
                 </select>
