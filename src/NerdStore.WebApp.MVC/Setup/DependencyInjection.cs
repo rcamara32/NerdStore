@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using NerdStore.Catalog.Application.Services;
 using NerdStore.Catalog.Data;
 using NerdStore.Catalog.Data.Repositories;
+using NerdStore.Catalog.Domain.Events;
 using NerdStore.Catalog.Domain.Interface.Repostory;
 using NerdStore.Catalog.Domain.Interface.Service;
 using NerdStore.Catalog.Domain.Services;
@@ -36,6 +38,8 @@ namespace NerdStore.WebApp.MVC.Setup
             //services.AddScoped<INotificationHandler<ProdutoAbaixoEstoqueEvent>, ProdutoEventHandler>();
             //services.AddScoped<INotificationHandler<PedidoIniciadoEvent>, ProdutoEventHandler>();
             //services.AddScoped<INotificationHandler<PedidoProcessamentoCanceladoEvent>, ProdutoEventHandler>();
+
+            services.AddScoped<INotificationHandler<LowStockEvent>, ProductEventHandler>();
 
 
         }

@@ -39,7 +39,7 @@ namespace NerdStore.Catalog.Domain.Services
             //TODO: parametrize this value
             if (product.StockQuantity < 5)
             {                
-                await bus.PublishEvent(new LowStockEvent(product.Id, quantity));
+                await bus.PublishEvent(new LowStockEvent(product.Id, product.StockQuantity));
             }
 
             productRepository.Update(product);
