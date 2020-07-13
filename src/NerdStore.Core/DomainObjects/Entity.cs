@@ -22,7 +22,7 @@ namespace NerdStore.Core.DomainObjects
         }
 
         public static bool operator ==(Entity a, Entity b)
-        
+
         {
             if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
             {
@@ -50,6 +50,11 @@ namespace NerdStore.Core.DomainObjects
         public override string ToString()
         {
             return $"{GetType().Name} [Id= {Id}]";
+        }
+
+        public virtual bool IsValid()
+        {
+            throw new NotImplementedException();
         }
 
     }
