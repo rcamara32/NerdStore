@@ -1,6 +1,7 @@
 ﻿using NerdStore.Core.DomainObjects;
 using NerdStore.Sales.Domain.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace NerdStore.Sales.Domain.Entities
 {
@@ -17,10 +18,8 @@ namespace NerdStore.Sales.Domain.Entities
         public bool Active { get; private set; }
         public bool Claimed { get; private set; }
 
-        //EF Relationship
-        public virtual Order Order { get; private set; }
-
-
+        //EF Relationship       
+        public ICollection<Order> Orders { get; set; }
 
 
 

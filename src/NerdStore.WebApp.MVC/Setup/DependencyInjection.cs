@@ -8,10 +8,9 @@ using NerdStore.Catalog.Domain.Interface.Repostory;
 using NerdStore.Catalog.Domain.Interface.Service;
 using NerdStore.Catalog.Domain.Services;
 using NerdStore.Core.Bus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NerdStore.Sales.Application.Commands;
+using NerdStore.Sales.Data.Repository;
+using NerdStore.Sales.Domain.Interface;
 
 namespace NerdStore.WebApp.MVC.Setup
 {
@@ -19,28 +18,22 @@ namespace NerdStore.WebApp.MVC.Setup
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            // Mediator
-            services.AddScoped<IMediatrHandler, MediatrHandler>();
-
-            //// Notifications
-            //services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
-
-            // Event Sourcing
-            //services.AddSingleton<IEventStoreService, LowStockEvent>();
-            //services.AddSingleton<IEventSourcingRepository, EventSourcingRepository>();
-
+            // Domain Bus (Mediator)
+            services.AddScoped<IMediatorHandler, MediatorHandler>();
+                 
             // Catalog
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductAppService, ProductAppService>();
             services.AddScoped<IStockService, StockService>();
-            services.AddScoped<CatalogContext>();
-
-            //services.AddScoped<INotificationHandler<ProdutoAbaixoEstoqueEvent>, ProdutoEventHandler>();
-            //services.AddScoped<INotificationHandler<PedidoIniciadoEvent>, ProdutoEventHandler>();
-            //services.AddScoped<INotificationHandler<PedidoProcessamentoCanceladoEvent>, ProdutoEventHandler>();
+            services.AddScoped<CatalogContext>();       
 
             services.AddScoped<INotificationHandler<LowStockEvent>, ProductEventHandler>();
 
+
+            //Sales
+            services.AddScoped<IOrderRepository, OrderRepository>();
+
+            services.AddScoped<IRequestHandler<AddOrderItemCommand, bool>, OrderCommandHandler>();
 
         }
     }

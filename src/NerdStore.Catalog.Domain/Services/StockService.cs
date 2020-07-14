@@ -11,10 +11,10 @@ namespace NerdStore.Catalog.Domain.Services
     {
 
         private readonly IProductRepository productRepository;
-        private readonly IMediatrHandler bus;
+        private readonly IMediatorHandler bus;
 
         public StockService(IProductRepository _productRepository, 
-            IMediatrHandler _bus)
+            IMediatorHandler _bus)
         {
             productRepository = _productRepository;
             bus = _bus;
