@@ -1,7 +1,7 @@
 ﻿using NerdStore.Catalog.Domain.Events;
 using NerdStore.Catalog.Domain.Interface.Repostory;
 using NerdStore.Catalog.Domain.Interface.Service;
-using NerdStore.Core.Bus;
+using NerdStore.Core.Communication.Mediator;
 using System;
 using System.Threading.Tasks;
 
@@ -10,19 +10,19 @@ namespace NerdStore.Catalog.Domain.Services
     public class StockService : IStockService
     {
 
-        private readonly IProductRepository productRepository;
-        private readonly IMediatorHandler bus;
+        private readonly IProductRepository _productRepository;
+        private readonly IMediatorHandler _mediatorHandler;
 
-        public StockService(IProductRepository _productRepository, 
-            IMediatorHandler _bus)
+        public StockService(IProductRepository productRepository,
+            IMediatorHandler mediatorHandler)
         {
-            productRepository = _productRepository;
-            bus = _bus;
+            _productRepository = productRepository;
+            _mediatorHandler = mediatorHandler;
         }
 
         public async Task<bool> Debit(Guid productId, int quantity)
         {
-            var product = await productRepository.GetById(productId);
+            var product = await _productRepository.GetById(productId);
 
             if (product == null)
             {
@@ -38,17 +38,17 @@ namespace NerdStore.Catalog.Domain.Services
 
             //TODO: parametrize this value
             if (product.StockQuantity < 5)
-            {                
-                await bus.PublishEvent(new LowStockEvent(product.Id, product.StockQuantity));
+            {
+                await _mediatorHandler.PublishEvent(new LowStockEvent(product.Id, product.StockQuantity));
             }
 
-            productRepository.Update(product);
-            return await productRepository.UnitOfWork.Commit();
+            _productRepository.Update(product);
+            return await _productRepository.UnitOfWork.Commit();
         }
 
         public async Task<bool> Replenishment(Guid productId, int quantity)
         {
-            var product = await productRepository.GetById(productId);
+            var product = await _productRepository.GetById(productId);
 
             if (product == null)
             {
@@ -56,8 +56,8 @@ namespace NerdStore.Catalog.Domain.Services
             }
 
             product.StockReplenishment(quantity);
-            productRepository.Update(product);
-            return await productRepository.UnitOfWork.Commit();
+            _productRepository.Update(product);
+            return await _productRepository.UnitOfWork.Commit();
         }
 
         #region IDisposable Support
@@ -70,7 +70,7 @@ namespace NerdStore.Catalog.Domain.Services
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    productRepository.Dispose();
+                    _productRepository.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

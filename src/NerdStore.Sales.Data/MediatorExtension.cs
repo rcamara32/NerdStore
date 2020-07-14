@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using NerdStore.Core.Bus;
+using NerdStore.Core.Communication.Mediator;
 using NerdStore.Core.DomainObjects;
 
 namespace NerdStore.Sales.Data

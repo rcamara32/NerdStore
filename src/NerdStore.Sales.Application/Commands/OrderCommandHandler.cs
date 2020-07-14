@@ -1,5 +1,6 @@
 ﻿using MediatR;
-using NerdStore.Core.Bus;
+using NerdStore.Core.Communication.Mediator;
+using NerdStore.Core.Messages.CommonMessages.Notifications;
 using NerdStore.Sales.Domain.Entities;
 using NerdStore.Sales.Domain.Interface;
 using System.Linq;
@@ -28,12 +29,11 @@ namespace NerdStore.Sales.Application.Commands
             if (!IsCommandValid(message)) return false;
 
             var order = await _orderRepository.GetOrderDraftByClientId(message.ClientId);
-            var item = new OrderItem(
-                message.ProductId, message.ProductName, message.Quantity, message.UnitPrice);
+            var item = new OrderItem(message.ProductId, message.ProductName, message.Quantity, message.UnitPrice);
 
             if (order == null)
             {
-                order = Order.OrderFactory.NewOrder(message.ClientId);
+                order = Order.OrderFactory.NewOrderDraft(message.ClientId);
                 order.AddItemOrder(item);
 
                 _orderRepository.Add(order);
@@ -62,12 +62,10 @@ namespace NerdStore.Sales.Application.Commands
 
             foreach (var error in message.ValidationResult.Errors)
             {
-                //_mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, error.ErrorMessage));
+                _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, error.ErrorMessage));
             }
 
             return false;
-
-
         }
     }
 }

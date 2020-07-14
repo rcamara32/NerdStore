@@ -155,14 +155,14 @@
             <h6 class="title-price"><small>OFFER</small></h6>
             <h3 style="margin-top: 0px;">@Model.Price.ToString("C")</h3>
 
-            <p>Apenas @Model.StockQuantity em estoque!</p>
+            <p>Only @Model.StockQuantity in stock!</p>
             <p>@Model.Description</p>
             <form method="post" asp-controller="Cart" asp-action="AddItem">
 
                 <input type="hidden" id="Id" name="Id" value="@Model.Id" />
 
                 <div class="section" style="padding-bottom: 20px;">
-                    <h6 class="title-attr"><small>Stock</small></h6>
+                    <h6 class="title-attr"><small>Quantity:</small></h6>
                     <div>
                         <div class="btn-minus"><span style="font-size: 15px">-</span></div>
                         <input id="quantity" name="quantity" style="font-size: 15px" type="text" value="1" />

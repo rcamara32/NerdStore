@@ -177,7 +177,7 @@ namespace NerdStore.Sales.Domain.Entities
 
         public static class OrderFactory
         {
-            public static Order NewOrder(Guid clientId)
+            public static Order NewOrderDraft(Guid clientId)
             {
                 var order = new Order
                 {

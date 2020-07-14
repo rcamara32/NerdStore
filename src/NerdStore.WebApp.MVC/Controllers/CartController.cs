@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NerdStore.Catalog.Application.Services;
-using NerdStore.Core.Bus;
+using NerdStore.Core.Communication.Mediator;
+using NerdStore.Core.Messages.CommonMessages.Notifications;
 using NerdStore.Sales.Application.Commands;
+using System;
+using System.Threading.Tasks;
 
-namespace NerdStore.WebApp.MVC.Controllers.Admin
+namespace NerdStore.WebApp.MVC.Controllers
 {
     public class CartController : ControllerBase
     {
         private readonly IProductAppService _productAppService;
         private readonly IMediatorHandler _mediatorHandler;
 
-        public CartController(
-            IProductAppService productAppService,
-            IMediatorHandler mediatorHandler)
+        public CartController(INotificationHandler<DomainNotification> notifications,
+                              IProductAppService productAppService,
+                              IMediatorHandler mediatorHandler) : base(notifications, mediatorHandler)
         {
             _productAppService = productAppService;
             _mediatorHandler = mediatorHandler;
@@ -28,6 +28,7 @@ namespace NerdStore.WebApp.MVC.Controllers.Admin
         }
 
         [HttpPost]
+        [Route("my-basket")]
         public async Task<IActionResult> AddItem(Guid id, int quantity)
         {
             var product = await _productAppService.GetById(id);
@@ -40,19 +41,14 @@ namespace NerdStore.WebApp.MVC.Controllers.Admin
             }
 
             var command = new AddOrderItemCommand(ClientId, product.Id, product.Name, quantity, product.Price);
-            var success = await _mediatorHandler.SendCommand(command);
+            await _mediatorHandler.SendCommand(command).ConfigureAwait(true);
 
-            //if (success)
-            //{
-                    
-            //}
-            //else
-            //{
-
-            //}
-
-
-            TempData["Error"] = "Product unavailable";
+            if (IsOperationValid())
+            {
+                return RedirectToAction("Index");
+            }
+            
+            TempData["Errors"] = GetErrorMessages();
             return RedirectToAction("ProductDetails", "ShopWindow", new { id });
 
         }
