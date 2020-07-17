@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace NerdStore.Sales.Data
 {
-
     public class SalesContext : DbContext, IUnitOfWork
     {
         private readonly IMediatorHandler _mediatorHandler;
@@ -41,10 +40,10 @@ namespace NerdStore.Sales.Data
                 }
             }
 
-            var sucesso = await base.SaveChangesAsync() > 0;
-            if (sucesso) await _mediatorHandler.PublishEvent(this);
+            var success = await base.SaveChangesAsync() > 0;
+            if (success) await _mediatorHandler.PublishEvent(this);
 
-            return sucesso;
+            return success;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

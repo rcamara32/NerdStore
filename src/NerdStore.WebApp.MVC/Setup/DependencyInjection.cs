@@ -10,6 +10,7 @@ using NerdStore.Catalog.Domain.Services;
 using NerdStore.Core.Communication.Mediator;
 using NerdStore.Core.Messages.CommonMessages.Notifications;
 using NerdStore.Sales.Application.Commands;
+using NerdStore.Sales.Application.Events;
 using NerdStore.Sales.Data;
 using NerdStore.Sales.Data.Repository;
 using NerdStore.Sales.Domain.Interface;
@@ -39,7 +40,14 @@ namespace NerdStore.WebApp.MVC.Setup
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<SalesContext>();
 
+            // Commands
             services.AddScoped<IRequestHandler<AddOrderItemCommand, bool>, OrderCommandHandler>();
+
+            // Events
+            services.AddScoped<INotificationHandler<OrderDraftStartedEvent>, OrderEventHandler>();
+            services.AddScoped<INotificationHandler<OrderItemAddedEvent>, OrderEventHandler>();
+            services.AddScoped<INotificationHandler<OrderUpdatedEvent>, OrderEventHandler>();
+
         }
 
         private static void CatalogBoundedContext(IServiceCollection services)
@@ -50,8 +58,9 @@ namespace NerdStore.WebApp.MVC.Setup
             services.AddScoped<CatalogContext>();
 
             // Events
-            services.AddScoped<INotificationHandler<LowStockEvent>, ProductEventHandler>();
-        
+            services.AddScoped<INotificationHandler<LowStockEvent>, ProductEventHandler>();        
+
+
         }
     }
 }

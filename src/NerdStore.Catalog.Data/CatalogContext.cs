@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NerdStore.Catalog.Domain.Entities;
 using NerdStore.Core.Data;
+using NerdStore.Core.Messages;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace NerdStore.Catalog.Data
     public class CatalogContext : DbContext, IUnitOfWork
     {
 
-        public CatalogContext(DbContextOptions<CatalogContext> options) 
+        public CatalogContext(DbContextOptions<CatalogContext> options)
             : base(options) { }
 
         public DbSet<Product> Products { get; set; }
@@ -46,6 +47,8 @@ namespace NerdStore.Catalog.Data
             {
                 property.SetColumnType("varchar(100)");
             }
+
+            modelBuilder.Ignore<Event>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogContext).Assembly);
         }

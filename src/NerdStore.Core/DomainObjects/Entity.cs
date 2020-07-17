@@ -8,29 +8,29 @@ namespace NerdStore.Core.DomainObjects
     {
         public Guid Id { get; set; }
 
-        //private List<Event> _notifications;
-        //public IReadOnlyCollection<Event> Notifications => _notifications?.AsReadOnly();
+        private List<Event> _notifications;
+        public IReadOnlyCollection<Event> Notifications => _notifications?.AsReadOnly();
 
         protected Entity()
         {
             Id = Guid.NewGuid();
         }
 
-        //public void AddEvents(Event evennt) 
-        //{
-        //    _notifications = _notifications ?? new List<Event>();
-        //    _notifications.Add(evennt);
-        //}
+        public void AddEvents(Event evennt)
+        {
+            _notifications = _notifications ?? new List<Event>();
+            _notifications.Add(evennt);
+        }
 
-        //public void RemoveEvent(Event evennt)
-        //{
-        //    _notifications?.Remove(evennt);
-        //}
+        public void RemoveEvent(Event evennt)
+        {
+            _notifications?.Remove(evennt);
+        }
 
-        //public void ClearEvents()
-        //{
-        //    _notifications?.Clear();
-        //}
+        public void ClearEvents()
+        {
+            _notifications?.Clear();
+        }
 
         public override bool Equals(object obj)
         {

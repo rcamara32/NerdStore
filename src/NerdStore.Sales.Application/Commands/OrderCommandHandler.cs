@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using NerdStore.Core.Communication.Mediator;
 using NerdStore.Core.Messages.CommonMessages.Notifications;
+using NerdStore.Sales.Application.Events;
 using NerdStore.Sales.Domain.Entities;
 using NerdStore.Sales.Domain.Interface;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace NerdStore.Sales.Application.Commands
                 order.AddItemOrder(item);
 
                 _orderRepository.Add(order);
+                order.AddEvents(new OrderDraftStartedEvent(message.ClientId, order.Id));
             }
             else
             {
@@ -51,7 +53,12 @@ namespace NerdStore.Sales.Application.Commands
                 {
                     _orderRepository.AddItem(item);
                 }
+
+                order.AddEvents(new OrderUpdatedEvent(message.ClientId, order.Id, order.TotalOrder));
             }
+
+            order.AddEvents(new OrderItemAddedEvent(message.ClientId, order.Id, message.ProductId,
+                        message.ProductName, message.UnitPrice, message.Quantity));
 
             return await _orderRepository.UnitOfWork.Commit();
         }
