@@ -2,6 +2,8 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +11,9 @@ using Microsoft.Extensions.Hosting;
 using NerdStore.Catalog.Application.AutoMapper;
 using NerdStore.Catalog.Data;
 using NerdStore.Sales.Data;
+using NerdStore.WebApp.MVC.Data;
 using NerdStore.WebApp.MVC.Setup;
+
 
 namespace NerdStore.WebApp.MVC
 {
@@ -26,16 +30,22 @@ namespace NerdStore.WebApp.MVC
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDbContext<CatalogContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<SalesContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
 
-            services.AddAutoMapper(typeof(DomainToDtoMappingProfile),
-                                     typeof(DtoToDomainMappingProfile));
+            services.AddAutoMapper(typeof(DomainToDtoMappingProfile), typeof(DtoToDomainMappingProfile));
 
             services.AddMediatR(typeof(Startup));
 
@@ -44,7 +54,7 @@ namespace NerdStore.WebApp.MVC
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {                     
+        {
 
             if (env.IsDevelopment())
             {
@@ -62,6 +72,8 @@ namespace NerdStore.WebApp.MVC
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

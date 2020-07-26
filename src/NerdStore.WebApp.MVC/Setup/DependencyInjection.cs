@@ -11,6 +11,7 @@ using NerdStore.Core.Communication.Mediator;
 using NerdStore.Core.Messages.CommonMessages.Notifications;
 using NerdStore.Sales.Application.Commands;
 using NerdStore.Sales.Application.Events;
+using NerdStore.Sales.Application.Queries;
 using NerdStore.Sales.Data;
 using NerdStore.Sales.Data.Repository;
 using NerdStore.Sales.Domain.Interface;
@@ -39,6 +40,10 @@ namespace NerdStore.WebApp.MVC.Setup
         {
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<SalesContext>();
+
+            // Queries 
+            services.AddScoped<IOrderQueries, OrderQueries>();
+
 
             // Commands
             services.AddScoped<IRequestHandler<AddOrderItemCommand, bool>, OrderCommandHandler>();
