@@ -1,6 +1,7 @@
 ﻿@model NerdStore.Catalog.Application.Dtos.ProductDto
+
 @{
-    ViewData["Title"] = "Produto Detalhe";
+    ViewData["Title"] = $"{Model.Name} | NerdStore";
 }
 
 <style>
@@ -140,6 +141,7 @@
         }
     }
 </style>
+
 <div class="container">
 
     <vc:summary />

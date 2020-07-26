@@ -7,7 +7,9 @@ namespace NerdStore.Sales.Application.Events
     public class OrderEventHandler :
         INotificationHandler<OrderDraftStartedEvent>,
         INotificationHandler<OrderItemAddedEvent>,
-        INotificationHandler<OrderUpdatedEvent>
+        INotificationHandler<OrderUpdatedEvent>,
+        INotificationHandler<VoucherAppliedEvent>
+
     {
 
         public Task Handle(OrderDraftStartedEvent notification, CancellationToken cancellationToken)
@@ -21,6 +23,11 @@ namespace NerdStore.Sales.Application.Events
         }
 
         public Task Handle(OrderUpdatedEvent notification, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(VoucherAppliedEvent notification, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

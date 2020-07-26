@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using NerdStore.Core.Communication.Mediator;
+using NerdStore.Core.Messages;
 using NerdStore.Core.Messages.CommonMessages.Notifications;
 using NerdStore.Sales.Application.Events;
 using NerdStore.Sales.Domain.Entities;
@@ -11,7 +12,10 @@ using System.Threading.Tasks;
 namespace NerdStore.Sales.Application.Commands
 {
     public class OrderCommandHandler :
-        IRequestHandler<AddOrderItemCommand, bool>
+        IRequestHandler<AddOrderItemCommand, bool>,
+        IRequestHandler<ApplyVoucherOrderCommand, bool>,
+        IRequestHandler<RemoveOrderItemCommand, bool>,
+        IRequestHandler<UpdateOrderItemCommand, bool>
     {
 
         private readonly IOrderRepository _orderRepository;
@@ -63,7 +67,60 @@ namespace NerdStore.Sales.Application.Commands
             return await _orderRepository.UnitOfWork.Commit();
         }
 
-        private bool IsCommandValid(AddOrderItemCommand message)
+        public async Task<bool> Handle(ApplyVoucherOrderCommand message, CancellationToken cancellationToken)
+        {
+            if (!IsCommandValid(message)) return false;
+
+            var order = await _orderRepository.GetOrderDraftByClientId(message.ClientId);
+
+            if (order == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("Order", "Order not found!"));
+                return false;
+            }
+
+            if (order.ClaimedVoucher)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("Order", "This order has already claimed a voucher"));
+                return false;
+            }
+
+            var voucher = await _orderRepository.GetVoucherByCode(message.VoucherCode);
+
+            if (voucher == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("Order", "Voucher not found!"));
+                return false;
+            }
+            
+            var appliedVoucher = order.ApplyVoucher(voucher);
+            if (!appliedVoucher.IsValid)
+            {
+                foreach (var error in appliedVoucher.Errors)
+                {
+                    await _mediatorHandler.PublishNotification(new DomainNotification(error.ErrorCode, error.ErrorMessage));
+                }
+
+                return false;
+            }
+
+            order.AddEvents(new VoucherAppliedEvent(message.ClientId, order.Id, voucher.Id));
+            _orderRepository.Update(order);
+            
+            return await _orderRepository.UnitOfWork.Commit();
+        }
+
+        public Task<bool> Handle(RemoveOrderItemCommand request, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> Handle(UpdateOrderItemCommand request, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private bool IsCommandValid(Command message)
         {
             if (message.Isvalid()) return true;
 

@@ -1,4 +1,5 @@
-﻿using NerdStore.Core.DomainObjects;
+﻿using FluentValidation.Results;
+using NerdStore.Core.DomainObjects;
 using NerdStore.Sales.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -76,11 +77,16 @@ namespace NerdStore.Sales.Domain.Entities
             Discount = discount;
         }
 
-        public void ApplyVoucher(Voucher voucher)
+        public ValidationResult ApplyVoucher(Voucher voucher)
         {
+            var validation = voucher.Validate();
+            if (!validation.IsValid) return validation;
+
             Voucher = voucher;
             ClaimedVoucher = true;
             CalculteTotalOrder();
+
+            return validation;
         }
 
         public bool IsAlreadyItemInOrder(OrderItem orderItem)

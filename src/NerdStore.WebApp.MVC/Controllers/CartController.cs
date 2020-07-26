@@ -58,6 +58,21 @@ namespace NerdStore.WebApp.MVC.Controllers
 
         }
 
+        [HttpPost]
+        [Route("apply-voucher")]
+        public async Task<IActionResult> ApplyVoucher(string voucherCode)
+        {
+            var command = new ApplyVoucherOrderCommand(ClientId, voucherCode);
+            await _mediatorHandler.SendCommand(command).ConfigureAwait(true);
+
+            if (IsOperationValid())
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View("Index", await _orderQueries.GetCartByClientId(ClientId));
+        }
+
 
     }
 }
